@@ -1,7 +1,5 @@
 
 spring:
-  config:
-    import: "optional:nacos:common"
   cloud:
     consul:
       port: 8500
@@ -9,8 +7,12 @@ spring:
     nacos:
       server-addr: 127.0.0.1:8848
       config:
-        file-extension: yaml
+        file-extension: yml
         group: DEFAULT_GROUP
+        refresh-enabled: true
+        namespace: example-data
+        name: config-server
+        enable-remote-sync-config: true
   application:
     name: config-server
   profiles:
