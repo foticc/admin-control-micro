@@ -1,0 +1,15 @@
+
+spring:
+  cloud:
+    consul:
+      port: 8500
+      host: localhost
+      discovery:
+        service-name: ${spring.application.name}
+        enabled: true
+        register: true
+        deregister: false
+  application:
+    name: gateway
+server:
+  port: 8001
