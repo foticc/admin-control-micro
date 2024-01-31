@@ -1,5 +1,7 @@
 
 spring:
+  config:
+    import: optional:nacos:config-server-dev.yml
   cloud:
     consul:
       port: 8500
@@ -13,7 +15,12 @@ spring:
         namespace: example-data
         name: config-server
         enable-remote-sync-config: true
+        extension-configs:
+          - data-id: config-server-dev.yml
+            refresh: true
   application:
     name: config-server
   profiles:
     active: dev
+server:
+  port: 8000

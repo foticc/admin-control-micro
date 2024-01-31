@@ -1,7 +1,5 @@
 
 spring:
-#  config:
-#    import: "optional:nacos:config-server.yml"
   cloud:
     consul:
       port: 8500

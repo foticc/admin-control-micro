@@ -1,6 +1,7 @@
 package com.foitcc.apisys.controller;
 
 
+import com.foitcc.apisys.apiclient.ConfigServerClient;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +17,16 @@ public class IndexController {
     @Value("${spring.application.name}")
     private String application;
 
+    private final ConfigServerClient configServerClient;
+
+    public IndexController(ConfigServerClient configServerClient) {
+        this.configServerClient = configServerClient;
+    }
+
     @GetMapping("/app")
     public String app(HttpServletRequest request) {
         log.info("app-{}>{}", request.getRequestURI(), request.getRequestedSessionId());
-        return this.application;
+        return this.application + configServerClient.data();
     }
 
 }
