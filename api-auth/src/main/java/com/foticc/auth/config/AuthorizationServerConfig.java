@@ -135,9 +135,9 @@ public class AuthorizationServerConfig {
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .authorizationGrantType(new AuthorizationGrantType("password"))
                 // 可跳转的地址
-                .redirectUri("http://spring-oauth-client:9001/token")
-                .redirectUri("http://spring-oauth-client:9001/test")
-                .redirectUri("http://spring-oauth-client:9001/login/oauth2/code/messaging-client-oidc")
+                .redirectUri("http://spring-oauth-client:8001/token")
+                .redirectUri("http://spring-oauth-client:8001/test")
+                .redirectUri("http://spring-oauth-client:8001/login/oauth2/code/messaging-client-oidc")
                 .redirectUri("http://www.baidu.com")
                 // scope 可访问的范围
                 .scope(OidcScopes.PROFILE)

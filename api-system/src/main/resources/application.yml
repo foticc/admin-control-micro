@@ -11,7 +11,7 @@ spring:
             logger-level: basic
     consul:
       port: 8500
-      host: localhost
+      host: 192.168.160.128
       discovery:
         service-name: ${spring.application.name}
   application:

@@ -3,7 +3,7 @@ spring:
   cloud:
     consul:
       port: 8500
-      host: localhost
+      host: 192.168.160.128
       discovery:
         service-name: ${spring.application.name}
         enabled: true
@@ -11,5 +11,27 @@ spring:
         deregister: false
   application:
     name: gateway
+  security:
+    oauth2:
+      client:
+        provider:
+          custom-issuer:
+            #            issuer-uri: http://spring-oauth-server:8080
+            issuer-uri: http://spring-oauth-server:3000
+            authorizationUri: ${spring.security.oauth2.client.provider.custom-issuer.issuer-uri}/oauth2/authorize
+            tokenUri: ${spring.security.oauth2.client.provider.custom-issuer.issuer-uri}/oauth2/token
+            jwk-set-uri: ${spring.security.oauth2.client.provider.custom-issuer.issuer-uri}/oauth2/jwks
+        registration:
+          messaging-client-oidc:
+            provider: custom-issuer
+            client-name: message-client
+            client-id: client-msg
+            client-secret: 123456
+            client-authentication-method: client_secret_basic
+            authorization-grant-type: authorization_code
+            redirect-uri: http://spring-oauth-client:8001/login/oauth2/code/messaging-client-oidc
+            scope:
+              - profile
+              - openid
 server:
   port: 8001
