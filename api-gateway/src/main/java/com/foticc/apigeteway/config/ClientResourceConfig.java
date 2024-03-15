@@ -1,6 +1,5 @@
 package com.foticc.apigeteway.config;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -10,8 +9,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
-import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverterAdapter;
@@ -23,8 +20,6 @@ import reactor.core.publisher.Mono;
 @EnableReactiveMethodSecurity
 public class ClientResourceConfig {
 
-    @Value("${spring.security.oauth2.client.provider.custom-issuer.jwk-set-uri}")
-    public String jwkSetUrl;
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
@@ -41,11 +36,6 @@ public class ClientResourceConfig {
                 );
 
         return http.build();
-    }
-
-    @Bean
-    public ReactiveJwtDecoder reactiveJwtDecoder() {
-        return new NimbusReactiveJwtDecoder(jwkSetUrl);
     }
 
 

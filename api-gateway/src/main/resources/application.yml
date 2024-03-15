@@ -13,6 +13,9 @@ spring:
     name: gateway
   security:
     oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://spring-oauth-server:3000
       client:
         provider:
           custom-issuer:

@@ -53,7 +53,6 @@ import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.time.Duration;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -158,6 +157,7 @@ public class AuthorizationServerConfig {
                 .redirectUri("http://spring-oauth-client:8001/token")
                 .redirectUri("http://spring-oauth-client:8001/test")
                 .redirectUri("http://spring-oauth-client:8001/login/oauth2/code/messaging-client-oidc")
+                .redirectUri("http://spring-oauth-client:8001/system/test")
                 .redirectUri("http://www.baidu.com")
                 // scope 可访问的范围
                 .scope(OidcScopes.PROFILE)
