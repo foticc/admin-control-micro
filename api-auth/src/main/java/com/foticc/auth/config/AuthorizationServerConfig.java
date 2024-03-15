@@ -9,11 +9,14 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,6 +24,7 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.oauth2.core.OAuth2Token;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
@@ -56,13 +60,16 @@ import java.util.UUID;
  * @see <a href="https://docs.spring.io/spring-authorization-server/reference/guides/how-to-ext-grant-type.html">...</a>
  */
 @Configuration
+@EnableWebSecurity
+@EnableMethodSecurity(jsr250Enabled = true,securedEnabled = true)
 public class AuthorizationServerConfig {
 
 
     @Bean
+    @Order(1)
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
                                                    OAuth2AuthorizationService oAuth2AuthorizationService,
-                                                   OAuth2TokenGenerator oAuth2TokenGenerator
+                                                   OAuth2TokenGenerator<? extends OAuth2Token> oAuth2TokenGenerator
                                                    ) throws Exception {
 
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
@@ -94,6 +101,18 @@ public class AuthorizationServerConfig {
         return build;
     }
 
+    @Bean
+    @Order(2)
+    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity.authorizeHttpRequests(registry ->
+                registry.requestMatchers("/assets/**", "/webjars/**").permitAll()
+                        .anyRequest().authenticated()
+        ).formLogin(Customizer.withDefaults());
+
+        httpSecurity.oauth2ResourceServer(resourceServerConfigurer -> resourceServerConfigurer.jwt(Customizer.withDefaults()));
+
+        return httpSecurity.build();
+    }
 
     // 一个基于内存的用户service
     @Bean
@@ -130,6 +149,7 @@ public class AuthorizationServerConfig {
                 .clientSecret(passwordEncoder.encode("123456"))
                 //客户端认证方式 ，
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_JWT)
                 // 配置该客户端支持的授权方式
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)

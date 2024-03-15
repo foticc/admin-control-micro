@@ -9,6 +9,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
+
 @RestController
 public class IndexController {
 
@@ -27,6 +31,11 @@ public class IndexController {
     public String app(HttpServletRequest request) {
         log.info("app-{}>{}", request.getRequestURI(), request.getRequestedSessionId());
         return this.application + configServerClient.data();
+    }
+
+    @GetMapping("/test")
+    public String test() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
     }
 
 }

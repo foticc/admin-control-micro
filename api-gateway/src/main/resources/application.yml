@@ -28,6 +28,7 @@ spring:
             client-id: client-msg
             client-secret: 123456
             client-authentication-method: client_secret_basic
+#            client-authentication-method: client_secret_jwt
             authorization-grant-type: authorization_code
             redirect-uri: http://spring-oauth-client:8001/login/oauth2/code/messaging-client-oidc
             scope:
