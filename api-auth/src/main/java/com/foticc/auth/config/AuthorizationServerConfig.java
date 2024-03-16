@@ -1,5 +1,6 @@
 package com.foticc.auth.config;
 
+import com.foticc.auth.extension.authorization.RedisOAuth2AuthorizationService;
 import com.foticc.auth.extension.password.PasswordGrantAuthenticationConverter;
 import com.foticc.auth.extension.password.PasswordGrantAuthenticationProvider;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -10,6 +11,7 @@ import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -177,8 +179,9 @@ public class AuthorizationServerConfig {
      * 对应表：oauth2_authorization
      */
     @Bean
-    public OAuth2AuthorizationService authorizationService(JdbcTemplate jdbcTemplate, RegisteredClientRepository registeredClientRepository) {
-        return new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
+    public OAuth2AuthorizationService authorizationService(RedisTemplate redisTemplate, RegisteredClientRepository registeredClientRepository) {
+//        return new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
+        return new RedisOAuth2AuthorizationService(redisTemplate, registeredClientRepository);
     }
 
     /**
