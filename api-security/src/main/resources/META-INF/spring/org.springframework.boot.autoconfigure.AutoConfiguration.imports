@@ -1,0 +1,2 @@
+com.foticc.security.config.RedisTemplateConfiguration
+com.foticc.security.support.authorization.RedisOAuth2AuthorizationService

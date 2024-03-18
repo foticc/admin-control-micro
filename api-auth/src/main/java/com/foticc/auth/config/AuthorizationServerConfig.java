@@ -10,6 +10,7 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
@@ -67,7 +68,7 @@ public class AuthorizationServerConfig {
 
 
     @Bean
-    @Order(1)
+    @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
                                                    OAuth2AuthorizationService oAuth2AuthorizationService,
                                                    OAuth2TokenGenerator<? extends OAuth2Token> oAuth2TokenGenerator
@@ -173,16 +174,16 @@ public class AuthorizationServerConfig {
         return new InMemoryRegisteredClientRepository(client);
     }
 
-    //TODO 授权信息和授权确认修改
-    /**
-     * 授权信息
-     * 对应表：oauth2_authorization
-     */
-    @Bean
-    public OAuth2AuthorizationService authorizationService(JdbcTemplate jdbcTemplate,RedisTemplate redisTemplate, RegisteredClientRepository registeredClientRepository) {
-//        return new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
-        return new RedisOAuth2AuthorizationService(redisTemplate, registeredClientRepository);
-    }
+//    //TODO 授权信息和授权确认修改
+//    /**
+//     * 授权信息
+//     * 对应表：oauth2_authorization
+//     */
+//    @Bean
+//    public OAuth2AuthorizationService authorizationService(JdbcTemplate jdbcTemplate,RedisTemplate redisTemplate, RegisteredClientRepository registeredClientRepository) {
+////        return new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
+//        return new RedisOAuth2AuthorizationService(redisTemplate, registeredClientRepository);
+//    }
 
     /**
      * 授权确认
