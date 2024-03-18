@@ -179,7 +179,7 @@ public class AuthorizationServerConfig {
      * 对应表：oauth2_authorization
      */
     @Bean
-    public OAuth2AuthorizationService authorizationService(RedisTemplate redisTemplate, RegisteredClientRepository registeredClientRepository) {
+    public OAuth2AuthorizationService authorizationService(JdbcTemplate jdbcTemplate,RedisTemplate redisTemplate, RegisteredClientRepository registeredClientRepository) {
 //        return new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
         return new RedisOAuth2AuthorizationService(redisTemplate, registeredClientRepository);
     }

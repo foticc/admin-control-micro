@@ -1,5 +1,4 @@
 
-
 spring:
   cloud:
     openfeign:
@@ -11,9 +10,14 @@ spring:
             logger-level: basic
     consul:
       port: 8500
-      host: 192.168.36.129
+      host: 192.168.160.128
       discovery:
         service-name: ${spring.application.name}
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://spring-oauth-server:3000
   application:
     name: system
 server:
