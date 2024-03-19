@@ -18,6 +18,7 @@ import org.springframework.security.oauth2.server.authorization.token.DefaultOAu
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
 
+import java.security.Principal;
 import java.util.Map;
 
 public class PasswordGrantAuthenticationProvider implements AuthenticationProvider {
@@ -42,6 +43,7 @@ public class PasswordGrantAuthenticationProvider implements AuthenticationProvid
 
         PasswordGrantAuthenticationToken passwordGrantAuthenticationToken = (PasswordGrantAuthenticationToken) authentication;
 
+        // todo 放置scope
 
         AuthorizationGrantType grantType = passwordGrantAuthenticationToken.getGrantType();
 
@@ -91,9 +93,11 @@ public class PasswordGrantAuthenticationProvider implements AuthenticationProvid
             authorizationBuilder.token(accessToken, (metadata) ->
                     metadata.put(
                             OAuth2Authorization.Token.CLAIMS_METADATA_NAME,
-                            ((ClaimAccessor) generatedAccessToken).getClaims()));
+                            ((ClaimAccessor) generatedAccessToken).getClaims()))
+                    .attribute(Principal.class.getName(),usernamePasswordAuthentication);
         } else {
-            authorizationBuilder.accessToken(accessToken);
+            authorizationBuilder.id(accessToken.getTokenValue())
+                            .accessToken(accessToken);
         }
 
         // 添加refresh_token @see org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationCodeAuthenticationProvider
