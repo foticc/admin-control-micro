@@ -1,7 +1,7 @@
-package com.foitcc.apisys.controller;
+package com.foticc.upms.controller;
 
 
-import com.foitcc.apisys.apiclient.ConfigServerClient;
+import com.foticc.upms.apiclient.ConfigServerClient;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -28,8 +27,11 @@ public class IndexController {
 
     private final ConfigServerClient configServerClient;
 
-    public IndexController(ConfigServerClient configServerClient) {
+    private final Long port;
+
+    public IndexController(ConfigServerClient configServerClient, @Value("${server.port}") Long port) {
         this.configServerClient = configServerClient;
+        this.port = port;
     }
 
     @GetMapping("/app")
@@ -48,6 +50,11 @@ public class IndexController {
     public List<String> scope() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+    }
+
+    @GetMapping("/port")
+    public String port() {
+        return this.port.toString();
     }
 
 }

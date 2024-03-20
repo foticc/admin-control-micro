@@ -7,54 +7,12 @@
         <artifactId>admin-control-micro</artifactId>
         <version>${revision}</version>
     </parent>
-    <groupId>com.example</groupId>
+
     <artifactId>api-system</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>api-sys</name>
-    <description>api-sys</description>
-    <properties>
-        <java.version>17</java.version>
-        <spring-cloud.version>2023.0.0</spring-cloud.version>
-    </properties>
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.foticc</groupId>
-            <artifactId>api-security</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
+    <packaging>pom</packaging>
 
-        <dependency>
-            <groupId>com.foitcc</groupId>
-            <artifactId>api-response-config</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-consul-discovery</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
+    <modules>
+        <module>api-upms</module>
+    </modules>
 
 </project>

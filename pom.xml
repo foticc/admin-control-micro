@@ -15,6 +15,7 @@
         <module>api-gateway</module>
         <module>api-security</module>
         <module>api-system</module>
+        <module>api-system/api-upms</module>
     </modules>
 
 

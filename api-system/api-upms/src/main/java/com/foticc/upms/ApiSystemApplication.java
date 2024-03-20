@@ -1,4 +1,4 @@
-package com.foitcc.apisys;
+package com.foticc.upms;
 
 import com.foticc.security.annotation.EnableResourceServer;
 import org.springframework.boot.SpringApplication;

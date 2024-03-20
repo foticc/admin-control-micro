@@ -1,4 +1,4 @@
-package com.foitcc.apisys.apiclient;
+package com.foticc.upms.apiclient;
 
 import feign.Logger;
 import org.springframework.context.annotation.Bean;

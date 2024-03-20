@@ -1,4 +1,4 @@
-package com.foitcc.apisys.apiclient;
+package com.foticc.upms.apiclient;
 
 import org.springframework.stereotype.Component;
 

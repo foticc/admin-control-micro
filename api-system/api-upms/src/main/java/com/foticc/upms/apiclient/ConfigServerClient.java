@@ -1,4 +1,4 @@
-package com.foitcc.apisys.apiclient;
+package com.foticc.upms.apiclient;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
