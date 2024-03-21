@@ -13,6 +13,7 @@
 
     <modules>
         <module>api-upms</module>
+        <module>api-upms-client</module>
     </modules>
 
 </project>

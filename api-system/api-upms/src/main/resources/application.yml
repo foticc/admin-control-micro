@@ -21,7 +21,17 @@ spring:
       timeout: 10s
       client-type: lettuce
       password: 123456
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/auth-admin?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+    username: root
+    password: root123456
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    generate-ddl: true
   application:
-    name: system
+    name: api-upms
 server:
   port: 8002

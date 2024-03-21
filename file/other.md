@@ -1,0 +1,2 @@
+`@EnableFeignClients(basePackages = {"com.foticc"})
+`

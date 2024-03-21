@@ -17,8 +17,8 @@ public class GateWayConfig{
     @Bean
     public RouteLocator routeLocator(RouteLocatorBuilder builder) {
         return builder.routes()
-                .route("config", predicateSpec -> predicateSpec.path("/config/**").filters(f -> f.stripPrefix(1)).uri("lb://config"))
-                .route("system", predicateSpec -> predicateSpec.path("/system/**").filters(f -> f.stripPrefix(1)).uri("lb://system"))
+                .route("auth", predicateSpec -> predicateSpec.path("/auth/**").filters(f -> f.stripPrefix(1)).uri("lb://api-auth"))
+                .route("upms", predicateSpec -> predicateSpec.path("/upms/**").filters(f -> f.stripPrefix(1)).uri("lb://api-upms"))
                 .build();
     }
 

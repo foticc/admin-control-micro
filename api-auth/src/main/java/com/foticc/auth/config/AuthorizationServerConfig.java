@@ -3,6 +3,8 @@ package com.foticc.auth.config;
 import com.foticc.auth.extension.authorization.RedisOAuth2AuthorizationService;
 import com.foticc.auth.extension.password.PasswordGrantAuthenticationConverter;
 import com.foticc.auth.extension.password.PasswordGrantAuthenticationProvider;
+import com.foticc.auth.manager.UserDetailsManager;
+import com.foticc.upms.client.feign.RemoteUserService;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
@@ -10,6 +12,7 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -116,16 +119,22 @@ public class AuthorizationServerConfig {
         return httpSecurity.build();
     }
 
-    // 一个基于内存的用户service
     @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-        UserDetails build = User.withUsername("user")
-                .password(passwordEncoder.encode("password"))
-                .roles("admin", "normal")
-                .authorities("app", "web")
-                .build();
-        return new InMemoryUserDetailsManager(build);
+    @Primary
+    public UserDetailsManager userDetailsManager(RemoteUserService remoteUserService) {
+        return new UserDetailsManager(remoteUserService);
     }
+
+    // 一个基于内存的用户service
+//    @Bean
+//    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
+//        UserDetails build = User.withUsername("user")
+//                .password(passwordEncoder.encode("password"))
+//                .roles("admin", "normal")
+//                .authorities("app", "web")
+//                .build();
+//        return new InMemoryUserDetailsManager(build);
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

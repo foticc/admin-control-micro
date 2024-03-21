@@ -1,2 +1,3 @@
 com.foticc.security.config.RedisTemplateConfiguration
 com.foticc.security.support.authorization.RedisOAuth2AuthorizationService
+com.foticc.security.annotation.support.InnerApiHandler

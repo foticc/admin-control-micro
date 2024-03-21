@@ -31,6 +31,11 @@
                 <artifactId>api-response-config</artifactId>
                 <version>${revision}</version>
             </dependency>
+            <dependency>
+                <groupId>com.foitcc</groupId>
+                <artifactId>api-upms-client</artifactId>
+                <version>${revision}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

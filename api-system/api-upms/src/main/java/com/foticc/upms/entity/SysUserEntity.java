@@ -5,7 +5,7 @@ import com.foticc.upms.entity.base.BaseEntity;
 import jakarta.persistence.Entity;
 
 
-@Entity(name = "sys_user_auth")
+@Entity(name = "sys_user")
 public class SysUserEntity extends BaseEntity {
 
     private String username;

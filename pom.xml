@@ -15,7 +15,6 @@
         <module>api-gateway</module>
         <module>api-security</module>
         <module>api-system</module>
-        <module>api-system/api-upms</module>
     </modules>
 
 
@@ -28,6 +27,15 @@
         <spring-boot.version>3.2.3</spring-boot.version>
         <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
     </properties>
+
+    <dependencies>
+        <!--Lombok-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
     <dependencyManagement>
         <dependencies>
