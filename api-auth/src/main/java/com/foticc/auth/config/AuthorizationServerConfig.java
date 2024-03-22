@@ -1,21 +1,17 @@
 package com.foticc.auth.config;
 
-import com.foticc.auth.extension.authorization.RedisOAuth2AuthorizationService;
 import com.foticc.auth.extension.password.PasswordGrantAuthenticationConverter;
 import com.foticc.auth.extension.password.PasswordGrantAuthenticationProvider;
-import com.foticc.auth.manager.UserDetailsManager;
-import com.foticc.upms.client.feign.RemoteUserService;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import org.apache.catalina.util.StandardSessionIdGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,16 +22,20 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.OAuth2Token;
+import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
+import org.springframework.security.oauth2.core.oidc.endpoint.OidcParameterNames;
+import org.springframework.security.oauth2.jwt.JwsHeader;
+import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationConsentService;
-import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
@@ -58,7 +58,9 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.sql.Date;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.UUID;
 
 /**
@@ -119,11 +121,11 @@ public class AuthorizationServerConfig {
         return httpSecurity.build();
     }
 
-    @Bean
-    @Primary
-    public UserDetailsManager userDetailsManager(RemoteUserService remoteUserService) {
-        return new UserDetailsManager(remoteUserService);
-    }
+//    @Bean
+//    @Primary
+//    public UserDetailsManager userDetailsManager(RemoteUserService remoteUserService) {
+//        return new UserDetailsManager(remoteUserService);
+//    }
 
     // 一个基于内存的用户service
 //    @Bean
@@ -249,6 +251,23 @@ public class AuthorizationServerConfig {
         OAuth2RefreshTokenGenerator refreshTokenGenerator = new OAuth2RefreshTokenGenerator();
         return new DelegatingOAuth2TokenGenerator(
                 jwtGenerator, accessTokenGenerator, refreshTokenGenerator);
+    }
+
+    // oidc id_token
+    @Bean
+    public OAuth2TokenCustomizer<JwtEncodingContext> jwtEncodingContextOAuth2TokenCustomizer() {
+        return new OAuth2TokenCustomizer<JwtEncodingContext>() {
+            @Override
+            public void customize(JwtEncodingContext context) {
+                JwsHeader.Builder jwsHeader = context.getJwsHeader();
+                JwtClaimsSet.Builder claims = context.getClaims();
+                if (OidcParameterNames.ID_TOKEN.equals(context.getTokenType().getValue())) {
+                    claims.claim(IdTokenClaimNames.AUTH_TIME, Date.from(Instant.now()));
+                    StandardSessionIdGenerator standardSessionIdGenerator = new StandardSessionIdGenerator();
+                    claims.claim("sid", standardSessionIdGenerator.generateSessionId());
+                }
+            }
+        };
     }
 
 }

@@ -7,6 +7,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.core.*;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
+import org.springframework.security.oauth2.core.oidc.OidcScopes;
+import org.springframework.security.oauth2.core.oidc.endpoint.OidcParameterNames;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
@@ -17,11 +21,19 @@ import org.springframework.security.oauth2.server.authorization.context.Authoriz
 import org.springframework.security.oauth2.server.authorization.token.DefaultOAuth2TokenContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
+import org.springframework.util.CollectionUtils;
 
 import java.security.Principal;
-import java.util.Map;
+import java.util.*;
 
+/**
+ * 自定义实现可参照原有的授权模式Provider 实现
+ */
 public class PasswordGrantAuthenticationProvider implements AuthenticationProvider {
+
+    private static final String ERROR_URI = "https://datatracker.ietf.org/doc/html/rfc6749#section-5.2";
+
+    private static final OAuth2TokenType ID_TOKEN_TOKEN_TYPE = new OAuth2TokenType(OidcParameterNames.ID_TOKEN);
 
 
     private final AuthenticationManager authenticationManager;
@@ -43,7 +55,6 @@ public class PasswordGrantAuthenticationProvider implements AuthenticationProvid
 
         PasswordGrantAuthenticationToken passwordGrantAuthenticationToken = (PasswordGrantAuthenticationToken) authentication;
 
-        // todo 放置scope
 
         AuthorizationGrantType grantType = passwordGrantAuthenticationToken.getGrantType();
 
@@ -54,6 +65,25 @@ public class PasswordGrantAuthenticationProvider implements AuthenticationProvid
         if (registeredClient != null && !registeredClient.getAuthorizationGrantTypes().contains(grantType)) {
             throw new OAuth2AuthenticationException(OAuth2ErrorCodes.UNAUTHORIZED_CLIENT);
         }
+
+        // 获取请求的权限
+        Set<String> scopes = passwordGrantAuthenticationToken.getScopes();
+        // 获取已注册的client的权限
+        Set<String> clientScopes = Objects.requireNonNull(registeredClient).getScopes();
+
+        Set<String> authorizedScopes = null;
+        if (!CollectionUtils.isEmpty(clientScopes) && !CollectionUtils.isEmpty(scopes)) {
+            for (String scope : scopes) {
+                if (!clientScopes.contains(scope)) {
+                    throw new OAuth2AuthenticationException(OAuth2ErrorCodes.INVALID_SCOPE);
+                }
+            }
+            authorizedScopes = scopes;
+        }else {
+            authorizedScopes = new HashSet<>(16);
+        }
+
+
         // 获取参数
         Map<String, Object> additionalParameters = passwordGrantAuthenticationToken.getAdditionalParameters();
 
@@ -62,12 +92,19 @@ public class PasswordGrantAuthenticationProvider implements AuthenticationProvid
 
         Authentication usernamePasswordAuthentication = authenticationManager.authenticate(authenticationToken);
 
+
+        // todo 暂时添加oidc的权限
+        authorizedScopes.addAll(Set.of(OidcScopes.OPENID,OidcScopes.PROFILE,OidcScopes.EMAIL,OidcScopes.ADDRESS,OidcScopes.PHONE));
+
+
+
         // token context builder
         DefaultOAuth2TokenContext.Builder tokenContextBuilder = DefaultOAuth2TokenContext.builder()
                 .registeredClient(registeredClient)
                 .principal(usernamePasswordAuthentication)
                 .authorizationServerContext(AuthorizationServerContextHolder.getContext())
                 .authorizationGrantType(grantType)
+                .authorizedScopes(authorizedScopes)
                 .authorizationGrant(passwordGrantAuthenticationToken);
 
         OAuth2TokenContext tokenContext = tokenContextBuilder.tokenType(OAuth2TokenType.ACCESS_TOKEN).build();
@@ -83,7 +120,7 @@ public class PasswordGrantAuthenticationProvider implements AuthenticationProvid
         OAuth2AccessToken accessToken = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER,
                 generatedAccessToken.getTokenValue(),
                 generatedAccessToken.getIssuedAt(),
-                generatedAccessToken.getExpiresAt(), null);
+                generatedAccessToken.getExpiresAt(), authorizedScopes);
 
         OAuth2Authorization.Builder authorizationBuilder = OAuth2Authorization.withRegisteredClient(registeredClient)
                 .principalName(usernamePasswordAuthentication.getName())
@@ -94,10 +131,12 @@ public class PasswordGrantAuthenticationProvider implements AuthenticationProvid
                     metadata.put(
                             OAuth2Authorization.Token.CLAIMS_METADATA_NAME,
                             ((ClaimAccessor) generatedAccessToken).getClaims()))
-                    .attribute(Principal.class.getName(),usernamePasswordAuthentication);
+                    .attribute(Principal.class.getName(),usernamePasswordAuthentication)
+                    .authorizedScopes(authorizedScopes);
         } else {
             authorizationBuilder.id(accessToken.getTokenValue())
-                            .accessToken(accessToken);
+                            .accessToken(accessToken)
+                    .authorizedScopes(authorizedScopes);
         }
 
         // 添加refresh_token @see org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationCodeAuthenticationProvider
@@ -116,12 +155,43 @@ public class PasswordGrantAuthenticationProvider implements AuthenticationProvid
                 authorizationBuilder.refreshToken(refreshToken);
             }
         }
+
+        // ----- ID token -----
+        OidcIdToken idToken;
+        if (authorizedScopes.contains(OidcScopes.OPENID)) {
+            // @formatter:off
+            tokenContext = tokenContextBuilder
+                    .tokenType(ID_TOKEN_TOKEN_TYPE)
+                    .authorization(authorizationBuilder.build())	// ID token customizer may need access to the access token and/or refresh token
+                    .build();
+            // @formatter:on
+            OAuth2Token generatedIdToken = this.tokenGenerator.generate(tokenContext);
+            if (!(generatedIdToken instanceof Jwt)) {
+                OAuth2Error error = new OAuth2Error(OAuth2ErrorCodes.SERVER_ERROR,
+                        "The token generator failed to generate the ID token.", ERROR_URI);
+                throw new OAuth2AuthenticationException(error);
+            }
+
+
+            idToken = new OidcIdToken(generatedIdToken.getTokenValue(), generatedIdToken.getIssuedAt(),
+                    generatedIdToken.getExpiresAt(), ((Jwt) generatedIdToken).getClaims());
+            authorizationBuilder.token(idToken, (metadata) ->
+                    metadata.put(OAuth2Authorization.Token.CLAIMS_METADATA_NAME, idToken.getClaims()));
+        } else {
+            idToken = null;
+        }
+
         OAuth2Authorization authorization = authorizationBuilder.build();
 
         // Save the OAuth2Authorization
         this.authorizationService.save(authorization);
 
-        return new OAuth2AccessTokenAuthenticationToken(registeredClient, clientPrincipal, accessToken, refreshToken);
+        if (idToken != null) {
+            additionalParameters = new HashMap<>();
+            additionalParameters.put(OidcParameterNames.ID_TOKEN, idToken.getTokenValue());
+        }
+        return new OAuth2AccessTokenAuthenticationToken(registeredClient, clientPrincipal, accessToken, refreshToken,
+                additionalParameters);
     }
 
 

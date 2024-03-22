@@ -21,18 +21,4 @@ public class ApiUpmsApplication  {
         SpringApplication.run(ApiUpmsApplication.class, args);
     }
 
-    @Bean
-    public CommandLineRunner commandLineRunner(ApplicationContext applicationContext) {
-        return new CommandLineRunner() {
-            @Override
-            public void run(String... args) throws Exception {
-                String[] beanDefinitionNames = applicationContext.getBeanDefinitionNames();
-                Arrays.sort(beanDefinitionNames);
-                for (String beanDefinitionName : beanDefinitionNames) {
-                    System.out.println("beanDefinitionName = " + beanDefinitionName);
-                }
-            }
-        };
-    }
-
 }

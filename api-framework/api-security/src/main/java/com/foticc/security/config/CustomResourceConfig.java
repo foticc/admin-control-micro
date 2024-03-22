@@ -10,8 +10,8 @@ import org.springframework.security.oauth2.server.resource.introspection.OpaqueT
 public class CustomResourceConfig {
 
     @Bean(name = "cacheTokenIntrospector")
-    public OpaqueTokenIntrospector cacheTokenIntrospector(ApplicationContext applicationContext, OAuth2AuthorizationService authorizationService) {
-        return new CacheTokenIntrospector(applicationContext,authorizationService);
+    public OpaqueTokenIntrospector cacheTokenIntrospector(OAuth2AuthorizationService authorizationService) {
+        return new CacheTokenIntrospector(authorizationService);
     }
 
 

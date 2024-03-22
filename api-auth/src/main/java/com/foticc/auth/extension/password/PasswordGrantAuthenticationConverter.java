@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.web.authentication.AuthenticationConverter;
 import org.springframework.util.MultiValueMap;
@@ -60,6 +59,6 @@ public class PasswordGrantAuthenticationConverter implements AuthenticationConve
 
         Authentication clientPrincipal = SecurityContextHolder.getContext().getAuthentication();
 
-        return new PasswordGrantAuthenticationToken(clientPrincipal,additionalParameters);
+        return new PasswordGrantAuthenticationToken(clientPrincipal,requestedScopes,additionalParameters);
     }
 }

@@ -1,1 +1,36 @@
 
+spring:
+  application:
+    name: api-auth
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/auth-admin?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+    username: root
+    password: root123456
+  data:
+    redis:
+      host: 192.168.160.128
+      port: 6379
+      client-type: lettuce
+      connect-timeout: 10
+      timeout: 10
+      password: 123456
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connect-timeout: 5000
+            read-timeout: 5000
+            logger-level: basic
+    consul:
+      port: 8500
+      host: 192.168.160.128
+      discovery:
+        service-name: ${spring.application.name}
+logging:
+  level:
+    org.springframework.security: trace
+    org.springframework.jdbc: debug
+server:
+  port: 3000

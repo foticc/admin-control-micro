@@ -34,7 +34,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 public class RedisTemplateConfiguration {
 
 	@Bean
-	@Primary
 	public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
 		RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
 		redisTemplate.setKeySerializer(RedisSerializer.string());

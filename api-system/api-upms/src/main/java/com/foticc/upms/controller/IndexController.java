@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,22 +25,16 @@ public class IndexController {
     @Value("${spring.application.name}")
     private String application;
 
-    private final ConfigServerClient configServerClient;
 
     private final Long port;
 
-    public IndexController(ConfigServerClient configServerClient, @Value("${server.port}") Long port) {
-        this.configServerClient = configServerClient;
+    public IndexController(@Value("${server.port}") Long port) {
         this.port = port;
     }
 
-    @GetMapping("/app")
-    public String app(HttpServletRequest request) {
-        log.info("app-{}>{}", request.getRequestURI(), request.getRequestedSessionId());
-        return this.application + configServerClient.data();
-    }
 
     @GetMapping("/test")
+    @PreAuthorize("hasAuthority('admin')")
     public String test() {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
     }
@@ -52,8 +47,10 @@ public class IndexController {
     }
 
     @GetMapping("/port")
+    @PreAuthorize("hasRole('ROLE_admin')")
     public String port() {
         return this.port.toString();
     }
+
 
 }

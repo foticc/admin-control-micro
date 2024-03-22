@@ -1,37 +1,47 @@
 package com.foticc.auth.manager;
 
-import com.foticc.upms.client.dto.SysAuthUserDTO;
-import com.foticc.upms.client.feign.RemoteUserService;
-import org.springframework.context.annotation.Primary;
-import org.springframework.security.core.userdetails.User;
+import com.foticc.auth.extension.constant.ExtensionConstant;
+import com.foticc.auth.manager.service.SysUserService;
+import org.springframework.cache.CacheManager;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-
+@Component
 public class UserDetailsManager implements UserDetailsService {
 
+    private final RedisTemplate<String,Object> redisTemplate;
 
-    private final RemoteUserService remoteUserService;
+    private final SysUserService sysUserService;
 
-    public UserDetailsManager(RemoteUserService remoteUserService) {
-        this.remoteUserService = remoteUserService;
+    public UserDetailsManager(RedisTemplate<String,Object> redisTemplate,SysUserService sysUserService) {
+        this.redisTemplate = redisTemplate;
+        this.sysUserService = sysUserService;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        SysAuthUserDTO userAuth = remoteUserService.loadUserByUsername(username);
+        UserDetails o = (UserDetails) redisTemplate.opsForValue().get(buildKey(username));
+        if (o != null) {
+            return o;
+        }
+        UserDetails userAuth = sysUserService.loadSysUser(username);
         if (userAuth == null) {
             throw new UsernameNotFoundException("not found");
         }
-        if (userAuth.getEnable()) {
+        if (!userAuth.isEnabled()) {
             throw new UsernameNotFoundException("account not enable");
         }
-        if (userAuth.getAccountLocked()) {
+        if (!userAuth.isAccountNonExpired()) {
             throw new UsernameNotFoundException("account locked");
         }
-        return new User(userAuth.getUsername(),userAuth.getPassword(), Collections.emptyList());
+        redisTemplate.opsForValue().set(buildKey(username),userAuth);
+        return userAuth;
+    }
+
+    private String buildKey(String username) {
+        return String.format("%s:%s", ExtensionConstant.CACHE_USER_PREFIX,username);
     }
 }

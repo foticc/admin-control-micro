@@ -24,12 +24,8 @@ public class CacheTokenIntrospector implements OpaqueTokenIntrospector {
 
     private final OAuth2AuthorizationService authorizationService;
 
-    private final ApplicationContext applicationContext;
-
-    public CacheTokenIntrospector(ApplicationContext applicationContext,
-            OAuth2AuthorizationService authorizationService) {
+    public CacheTokenIntrospector(OAuth2AuthorizationService authorizationService) {
         this.authorizationService = authorizationService;
-        this.applicationContext = applicationContext;
     }
 
     // TODO 怎么做
@@ -55,7 +51,6 @@ public class CacheTokenIntrospector implements OpaqueTokenIntrospector {
             // TODO 处理账号被锁定，过期，未启用的状态  （过期或锁定时要删除缓存，这种情况在认证中心也要进行处理）
             authUserPrincipal = new AuthUserPrincipal(principal);
             authUserPrincipal.getAttributes().put(OAuth2ParameterNames.CLIENT_ID,authorization.getRegisteredClientId());
-            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         }
 
         return authUserPrincipal;

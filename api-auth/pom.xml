@@ -22,20 +22,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.foticc</groupId>
-            <artifactId>api-security</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.foitcc</groupId>
-            <artifactId>api-upms-client</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <artifactId>api-security</artifactId>
         </dependency>
 
         <dependency>

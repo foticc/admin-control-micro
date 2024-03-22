@@ -4,15 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.foitcc</groupId>
-        <artifactId>admin-control-micro</artifactId>
+        <artifactId>api-framework</artifactId>
         <version>${revision}</version>
     </parent>
-    <groupId>com.foticc</groupId>
+
     <artifactId>api-security</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>security</name>
-    <description>security</description>
-    <packaging>jar</packaging>
+
     <properties>
         <java.version>17</java.version>
     </properties>
@@ -21,7 +18,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-authorization-server</artifactId>
         </dependency>
-
 
         <dependency>
             <groupId>org.springframework.cloud</groupId>

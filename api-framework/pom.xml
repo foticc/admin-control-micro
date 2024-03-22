@@ -17,6 +17,7 @@
         <module>api-response-config</module>
         <module>api-common</module>
         <module>api-dependencies</module>
+        <module>api-security</module>
     </modules>
 
 </project>
