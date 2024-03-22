@@ -1,10 +1,12 @@
 package com.foticc.auth.manager.entity;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table(name = "sys_user")
 public class SysUser {
 
+    @Id
     private Long id;
 
     private String username;

@@ -1,24 +1,36 @@
 package com.foticc.auth.manager;
 
 import com.foticc.auth.extension.constant.ExtensionConstant;
+import com.foticc.auth.manager.entity.SysRole;
+import com.foticc.auth.manager.entity.SysUser;
+import com.foticc.auth.manager.service.SysRoleService;
 import com.foticc.auth.manager.service.SysUserService;
-import org.springframework.cache.CacheManager;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Component
 public class UserDetailsManager implements UserDetailsService {
 
     private final RedisTemplate<String,Object> redisTemplate;
-
     private final SysUserService sysUserService;
 
-    public UserDetailsManager(RedisTemplate<String,Object> redisTemplate,SysUserService sysUserService) {
+    private final SysRoleService sysRoleService;
+
+    public UserDetailsManager(RedisTemplate<String,Object> redisTemplate,
+                              SysUserService sysUserService,
+                              SysRoleService sysRoleService) {
         this.redisTemplate = redisTemplate;
         this.sysUserService = sysUserService;
+        this.sysRoleService = sysRoleService;
     }
 
     @Override
@@ -27,18 +39,29 @@ public class UserDetailsManager implements UserDetailsService {
         if (o != null) {
             return o;
         }
-        UserDetails userAuth = sysUserService.loadSysUser(username);
+        SysUser userAuth = sysUserService.loadSysUser(username);
         if (userAuth == null) {
             throw new UsernameNotFoundException("not found");
         }
-        if (!userAuth.isEnabled()) {
+        if (!userAuth.getEnable()) {
             throw new UsernameNotFoundException("account not enable");
         }
-        if (!userAuth.isAccountNonExpired()) {
+        if (userAuth.getAccountLocked()) {
             throw new UsernameNotFoundException("account locked");
         }
-        redisTemplate.opsForValue().set(buildKey(username),userAuth);
-        return userAuth;
+        Set<SimpleGrantedAuthority> roles = sysRoleService.getRolesByUserId(userAuth.getId())
+                .stream().map(m-> new SimpleGrantedAuthority(m.getName()))
+                .collect(Collectors.toSet());
+
+        User user = new User(userAuth.getUsername(),
+                userAuth.getPassword(),
+                userAuth.getEnable(),
+                !userAuth.getAccountExpired(),
+                !userAuth.getAccountExpired(),
+                !userAuth.getAccountLocked(),
+                roles);
+        redisTemplate.opsForValue().set(buildKey(username),user);
+        return user;
     }
 
     private String buildKey(String username) {
