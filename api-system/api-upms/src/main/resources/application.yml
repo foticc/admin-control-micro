@@ -35,3 +35,8 @@ spring:
     name: api-upms
 server:
   port: 8002
+security:
+  oauth2:
+    resource:
+      ignores:
+        urls: 12,123,1241,12515

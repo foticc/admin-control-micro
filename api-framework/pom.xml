@@ -18,6 +18,7 @@
         <module>api-common</module>
         <module>api-dependencies</module>
         <module>api-security</module>
+        <module>api-openfeign</module>
     </modules>
 
 </project>

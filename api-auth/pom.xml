@@ -16,14 +16,20 @@
         <java.version>17</java.version>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-oauth2-authorization-server</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.foitcc</groupId>
             <artifactId>api-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.foitcc</groupId>
+            <artifactId>api-upms-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-authorization-server</artifactId>
         </dependency>
 
         <dependency>

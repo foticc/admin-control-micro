@@ -14,6 +14,7 @@
         <module>api-framework</module>
         <module>api-gateway</module>
         <module>api-system</module>
+        <module>api-framework/api-openfeign</module>
     </modules>
 
 

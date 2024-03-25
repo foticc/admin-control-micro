@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Bean;
 import java.util.Arrays;
 
 @EnableResourceServer
-@EnableFeignClients
+@EnableFeignClients(basePackages = {"com.foticc"})
 @EnableDiscoveryClient
 @SpringBootApplication
 public class ApiUpmsApplication  {

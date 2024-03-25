@@ -33,6 +33,11 @@
             </dependency>
             <dependency>
                 <groupId>com.foitcc</groupId>
+                <artifactId>api-openfeign</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.foitcc</groupId>
                 <artifactId>api-response-config</artifactId>
                 <version>${revision}</version>
             </dependency>

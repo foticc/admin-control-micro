@@ -18,9 +18,7 @@ public class LoginService {
 
     @Nullable
     public SysAuthUserDTO loadUserByUsername(String username) {
-        SysUserEntity sysUserEntity = new SysUserEntity();
-        sysUserEntity.setUsername(username);
-        return sysUserEntityRepository.findOne(Example.of(sysUserEntity)).map(
+        return sysUserEntityRepository.findByUsername(username).map(
                 m->{
                     SysAuthUserDTO sysAuthUserDTO = new SysAuthUserDTO();
                     sysAuthUserDTO.setUsername(m.getUsername());

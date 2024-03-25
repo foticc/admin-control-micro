@@ -5,28 +5,31 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.foitcc</groupId>
-        <artifactId>api-system</artifactId>
+        <artifactId>api-framework</artifactId>
         <version>${revision}</version>
     </parent>
 
-    <artifactId>api-upms-client</artifactId>
+    <artifactId>api-openfeign</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.foitcc</groupId>
             <artifactId>api-common</artifactId>
         </dependency>
-        <!--feign 注解依赖-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-openfeign-core</artifactId>
-            <optional>true</optional>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+        <!-- okhttp -->
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-okhttp</artifactId>
         </dependency>
     </dependencies>
 

@@ -1,6 +1,7 @@
 package com.foticc.upms.controller;
 
 
+import com.foticc.security.annotation.InnerAPI;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
@@ -17,6 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequestMapping("/index")
 @RestController
 public class IndexController {
 
@@ -33,13 +36,14 @@ public class IndexController {
     }
 
 
-    @GetMapping("/test")
+    @InnerAPI
+    @GetMapping("/test/v2/demo")
     @PreAuthorize("hasAuthority('admin')")
     public String test() {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
     }
 
-
+    @InnerAPI
     @GetMapping("/scope")
     public List<String> scope() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
