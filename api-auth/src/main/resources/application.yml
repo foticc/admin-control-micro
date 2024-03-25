@@ -12,7 +12,7 @@ spring:
       host: 192.168.160.128
       port: 6379
       client-type: lettuce
-      connect-timeout: 10
+      connect-timeout: 30
       timeout: 10
       password: 123456
   cloud:

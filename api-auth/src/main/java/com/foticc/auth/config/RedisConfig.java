@@ -38,7 +38,7 @@ public class RedisConfig {
      */
     @Primary
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
+    public RedisTemplate<String, Object> jsonRedisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
         StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
@@ -48,6 +48,7 @@ public class RedisConfig {
                 // 不序列化 transient字段
                 .configure(MapperFeature.PROPAGATE_TRANSIENT_MARKER, true)
                 .configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES,false)
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false)
                 .addModule(configureJavaTimeModule())
                 .build();
 

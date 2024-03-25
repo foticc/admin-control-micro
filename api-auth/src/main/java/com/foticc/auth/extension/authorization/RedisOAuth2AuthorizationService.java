@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * redis存储
+ * TODO remove
  */
 public class RedisOAuth2AuthorizationService implements OAuth2AuthorizationService {
 
