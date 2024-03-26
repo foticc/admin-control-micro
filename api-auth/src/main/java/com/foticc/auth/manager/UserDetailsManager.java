@@ -21,23 +21,27 @@ import java.util.Collections;
 @Component
 public class UserDetailsManager implements UserDetailsService {
 
-    private final RedisTemplate<String,Object> jsonRedisTemplate;
+    private final RedisTemplate<String,Object> redisTemplate;
 
 
     private final RemoteUserService remoteUserService;
 
-    public UserDetailsManager(@Qualifier("jsonRedisTemplate") RedisTemplate<String,Object> jsonRedisTemplate,
+    public UserDetailsManager(RedisTemplate<String,Object> redisTemplate,
                              RemoteUserService remoteUserService) {
-        this.jsonRedisTemplate = jsonRedisTemplate;
+        this.redisTemplate = redisTemplate;
         this.remoteUserService = remoteUserService;
     }
 
+    //todo  修改redistemplate
+
+    /**
+     * 返回一个userdetails
+     * @param username the username identifying the user whose data is required.
+     * @return
+     * @throws UsernameNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-         UserDetailAuthentication o = (UserDetailAuthentication) jsonRedisTemplate.opsForValue().get(buildKey(username));
-        if (o != null) {
-            return o;
-        }
         SysAuthUserDTO userAuth = remoteUserService.loadUserByUsername(username).getData();
         if (userAuth == null) {
             throw new UsernameNotFoundException("not found");
@@ -57,7 +61,6 @@ public class UserDetailsManager implements UserDetailsService {
                 userAuth.getAccountLocked(),
                 userAuth.getEnable(),
                 Collections.singleton(new RoleGrantedAuthority("admin")));
-        jsonRedisTemplate.opsForValue().set(buildKey(username),user);
         return user;
     }
 

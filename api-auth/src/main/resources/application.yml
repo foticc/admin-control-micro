@@ -9,7 +9,7 @@ spring:
     password: root123456
   data:
     redis:
-      host: 192.168.160.128
+      host: 192.168.160.137
       port: 6379
       client-type: lettuce
       connect-timeout: 30
@@ -25,7 +25,7 @@ spring:
             logger-level: basic
     consul:
       port: 8500
-      host: 192.168.160.128
+      host: 192.168.160.137
       discovery:
         service-name: ${spring.application.name}
 logging:
