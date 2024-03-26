@@ -2,6 +2,8 @@ package com.foticc.upms.client.dto;
 
 import lombok.Data;
 
+import java.util.Set;
+
 @Data
 public class SysAuthUserDTO {
 
@@ -14,5 +16,7 @@ public class SysAuthUserDTO {
     private Boolean accountLocked;
 
     private Boolean enable;
+
+    private Set<String> roles;
 
 }

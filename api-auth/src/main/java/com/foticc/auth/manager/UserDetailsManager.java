@@ -17,6 +17,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class UserDetailsManager implements UserDetailsService {
@@ -53,15 +55,16 @@ public class UserDetailsManager implements UserDetailsService {
             throw new UsernameNotFoundException("account locked");
         }
 
-
-        UserDetailAuthentication user = new UserDetailAuthentication(
+        Set<RoleGrantedAuthority> roleGrantedAuthoritySet = userAuth.getRoles().stream()
+                .map(RoleGrantedAuthority::new)
+                .collect(Collectors.toSet());
+        return new UserDetailAuthentication(
                 userAuth.getUsername(),
                 userAuth.getPassword(),
                 userAuth.getAccountExpired(),
                 userAuth.getAccountLocked(),
                 userAuth.getEnable(),
-                Collections.singleton(new RoleGrantedAuthority("admin")));
-        return user;
+                roleGrantedAuthoritySet);
     }
 
     private String buildKey(String username) {

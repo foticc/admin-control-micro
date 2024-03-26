@@ -1,24 +1,43 @@
 package com.foticc.upms.service;
 
 import com.foticc.upms.client.dto.SysAuthUserDTO;
+import com.foticc.upms.entity.SysRoleEntity;
+import com.foticc.upms.entity.SysUserDetailEntity;
 import com.foticc.upms.entity.SysUserEntity;
+import com.foticc.upms.repos.SysUserDetailEntityRepository;
 import com.foticc.upms.repos.SysUserEntityRepository;
-import org.springframework.data.domain.Example;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class LoginService {
 
-    private final SysUserEntityRepository sysUserEntityRepository;
+    private final SysUserEntityRepository userEntityRepository;
 
-    public LoginService(SysUserEntityRepository sysUserEntityRepository) {
-        this.sysUserEntityRepository = sysUserEntityRepository;
+    private final SysUserDetailEntityRepository userDetailEntityRepository;
+
+    public LoginService(SysUserEntityRepository sysUserEntityRepository,
+                        SysUserDetailEntityRepository userDetailEntityRepository) {
+        this.userEntityRepository = sysUserEntityRepository;
+        this.userDetailEntityRepository = userDetailEntityRepository;
     }
 
     @Nullable
     public SysAuthUserDTO loadUserByUsername(String username) {
-        return sysUserEntityRepository.findByUsername(username).map(
+        Optional<SysUserEntity> byUsername = userEntityRepository.findByUsername(username);
+        if (byUsername.isEmpty()) {
+            return null;
+        }
+        Optional<SysUserDetailEntity> userDetail = userDetailEntityRepository.findByUsername(username);
+        Set<String> roles = userDetail.map(sysUserDetailEntity -> sysUserDetailEntity.getRoles().stream().
+                map(SysRoleEntity::getName)
+                .collect(Collectors.toSet()))
+                .orElse(null);
+        return userEntityRepository.findByUsername(username).map(
                 m->{
                     SysAuthUserDTO sysAuthUserDTO = new SysAuthUserDTO();
                     sysAuthUserDTO.setUsername(m.getUsername());
@@ -26,6 +45,7 @@ public class LoginService {
                     sysAuthUserDTO.setEnable(m.getEnable());
                     sysAuthUserDTO.setAccountLocked(m.getAccountLocked());
                     sysAuthUserDTO.setAccountExpired(m.getAccountExpired());
+                    sysAuthUserDTO.setRoles(roles);
                     return sysAuthUserDTO;
                 }
         ).orElse(null);
