@@ -2,8 +2,10 @@ package com.foticc.apigeteway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
+@EnableScheduling
 public class ApiGetewayApplication {
 
     public static void main(String[] args) {

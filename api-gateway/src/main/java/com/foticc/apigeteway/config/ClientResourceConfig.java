@@ -15,6 +15,9 @@ import org.springframework.context.annotation.Configuration;
 //import org.springframework.security.web.server.SecurityWebFilterChain;
 //import reactor.core.publisher.Mono;
 
+/**
+ * 将网关作为资源服务器
+ */
 @Configuration
 //@EnableWebFluxSecurity
 //@EnableReactiveMethodSecurity

@@ -1,5 +1,8 @@
 
 spring:
+  config:
+    import:
+      - optional:nacos:config-common
   cloud:
     consul:
       port: 8500
@@ -9,6 +12,13 @@ spring:
         enabled: true
         register: true
         deregister: false
+    nacos:
+      config:
+        server-addr: 192.168.160.137:8848
+        file-extension: yaml
+        username: nacos
+        password: nacos
+        group: DEFAULT_GROUP
   application:
     name: gateway
   security:
@@ -39,3 +49,6 @@ spring:
               - openid
 server:
   port: 8001
+logging:
+  level:
+   com.alibaba.cloud.nacos: debug
