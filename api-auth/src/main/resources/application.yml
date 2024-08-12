@@ -13,7 +13,7 @@ spring:
       port: 6379
       client-type: lettuce
       connect-timeout: 30
-      timeout: 10
+      timeout: 100
       password: 123456
   cloud:
     openfeign:
