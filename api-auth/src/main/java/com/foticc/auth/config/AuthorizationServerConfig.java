@@ -112,7 +112,7 @@ public class AuthorizationServerConfig {
     @Order(2)
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(registry ->
-                registry.requestMatchers("/assets/**", "/webjars/**").permitAll()
+                registry.requestMatchers("/assets/**", "/webjars/**","/token/**").permitAll()
                         .anyRequest().authenticated()
         ).formLogin(Customizer.withDefaults());
 

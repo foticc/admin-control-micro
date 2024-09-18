@@ -12,7 +12,7 @@ import java.util.Set;
 
 public class PasswordGrantAuthenticationToken extends OAuth2AuthorizationGrantAuthenticationToken {
 
-    public static final AuthorizationGrantType FLAG = new AuthorizationGrantType(ExtensionConstant.GRANT_TYPE_PASSWORD);
+    public static final AuthorizationGrantType GRANT_TYPE_PASSWORD = new AuthorizationGrantType(ExtensionConstant.GRANT_TYPE_PASSWORD);
 
     // todo 暂时设置默认包含所有oidc搜的scope
     private final Set<String> scopes;
@@ -25,7 +25,7 @@ public class PasswordGrantAuthenticationToken extends OAuth2AuthorizationGrantAu
      * @param scopes
      */
     protected PasswordGrantAuthenticationToken(Authentication clientPrincipal, Set<String> scopes, Map<String, Object> additionalParameters) {
-        super(FLAG, clientPrincipal, additionalParameters);
+        super(GRANT_TYPE_PASSWORD, clientPrincipal, additionalParameters);
         this.scopes = scopes;
     }
 
