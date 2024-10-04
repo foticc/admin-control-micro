@@ -1,0 +1,15 @@
+spring:
+  cloud:
+    consul:
+      host: 192.168.160.137
+    nacos:
+      config:
+        server-addr: 192.168.160.137:8848
+  data:
+    redis:
+      host: 192.168.160.137
+      port: 6379
+      client-type: lettuce
+      connect-timeout: 30
+      timeout: 100
+      password: 123456

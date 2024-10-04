@@ -177,7 +177,7 @@ public class AuthorizationServerConfig {
                 .scope(OidcScopes.PROFILE)
                 .scope(OidcScopes.OPENID)
                 // 客户端设置，设置用户需要确认授权
-                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
+                .clientSettings(ClientSettings.builder().requireProofKey(true).requireAuthorizationConsent(true).build())
                 // token的相关设置
                 .tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofHours(24)).refreshTokenTimeToLive(Duration.ofHours(48)).build())
                 .build();
