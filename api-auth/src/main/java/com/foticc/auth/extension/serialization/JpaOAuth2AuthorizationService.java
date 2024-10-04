@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 
-@Component
+//@Component
 public class JpaOAuth2AuthorizationService implements OAuth2AuthorizationService {
 
     private final AuthorizationRepository authorizationRepository;

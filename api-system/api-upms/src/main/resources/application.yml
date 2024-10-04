@@ -8,24 +8,11 @@ spring:
             connect-timeout: 5000
             read-timeout: 5000
             logger-level: basic
-    consul:
-      port: 8500
-      host: 192.168.160.137
-      discovery:
-        service-name: ${spring.application.name}
-  data:
-    redis:
-      port: 6379
-      host: 192.168.160.137
-      connect-timeout: 10s
-      timeout: 10s
-      client-type: lettuce
-      password: 123456
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/auth-admin?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
-    username: root
-    password: root123456
+    url: jdbc:mysql://121.41.65.116:3306/auth-admin?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+    username: admin
+    password: authadmin
   jpa:
     hibernate:
       ddl-auto: update
@@ -33,6 +20,8 @@ spring:
     generate-ddl: true
   application:
     name: api-upms
+  profiles:
+    active: home
 server:
   port: 8002
 security:

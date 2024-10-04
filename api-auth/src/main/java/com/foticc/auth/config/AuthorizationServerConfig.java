@@ -2,6 +2,8 @@ package com.foticc.auth.config;
 
 import com.foticc.auth.extension.password.PasswordGrantAuthenticationConverter;
 import com.foticc.auth.extension.password.PasswordGrantAuthenticationProvider;
+import com.foticc.auth.manager.UserDetailsManager;
+import com.foticc.upms.client.feign.RemoteUserService;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
@@ -10,6 +12,7 @@ import com.nimbusds.jose.proc.SecurityContext;
 import org.apache.catalina.util.StandardSessionIdGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
@@ -131,7 +134,7 @@ public class AuthorizationServerConfig {
 //    @Bean
 //    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
 //        UserDetails build = User.withUsername("user")
-//                .password(passwordEncoder.encode("password"))
+//                .password(passwordEncoder.encode("123456"))
 //                .roles("admin", "normal")
 //                .authorities("app", "web")
 //                .build();
@@ -154,36 +157,36 @@ public class AuthorizationServerConfig {
      *     Sets the JWS algorithm that must be used for signing the JWT used to authenticate the Client
      *     at the Token Endpoint for the private_key_jwt and client_secret_jwt authentication methods.
      */
-    @Bean
-    public RegisteredClientRepository registeredClientRepository(PasswordEncoder passwordEncoder) {
-        RegisteredClient client = RegisteredClient.withId(UUID.randomUUID().toString())
-                .clientId("client-msg")
-                .clientName("客户端")
-                .clientSecret(passwordEncoder.encode("123456"))
-                //客户端认证方式 ，
-                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_JWT)
-                // 配置该客户端支持的授权方式
-                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .authorizationGrantType(new AuthorizationGrantType("password"))
-                // 可跳转的地址
-                .redirectUri("http://spring-oauth-client:8001/token")
-                .redirectUri("http://spring-oauth-client:8001/test")
-                .redirectUri("http://spring-oauth-client:8001/login/oauth2/code/messaging-client-oidc")
-                .redirectUri("http://spring-oauth-client:8001/system/test")
-                .redirectUri("http://www.baidu.com")
-                // scope 可访问的范围
-                .scope(OidcScopes.PROFILE)
-                .scope(OidcScopes.OPENID)
-                // 客户端设置，设置用户需要确认授权
-                .clientSettings(ClientSettings.builder().requireProofKey(true).requireAuthorizationConsent(true).build())
-                // token的相关设置
-                .tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofHours(24)).refreshTokenTimeToLive(Duration.ofHours(48)).build())
-                .build();
-
-        return new InMemoryRegisteredClientRepository(client);
-    }
+//    @Bean
+//    public RegisteredClientRepository registeredClientRepository(PasswordEncoder passwordEncoder) {
+//        RegisteredClient client = RegisteredClient.withId(UUID.randomUUID().toString())
+//                .clientId("client-msg")
+//                .clientName("客户端")
+//                .clientSecret(passwordEncoder.encode("123456"))
+//                //客户端认证方式 ，
+//                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+//                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_JWT)
+//                // 配置该客户端支持的授权方式
+//                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+//                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+//                .authorizationGrantType(new AuthorizationGrantType("password"))
+//                // 可跳转的地址
+//                .redirectUri("http://spring-oauth-client:8001/token")
+//                .redirectUri("http://spring-oauth-client:8001/test")
+//                .redirectUri("http://spring-oauth-client:8001/login/oauth2/code/messaging-client-oidc")
+//                .redirectUri("http://spring-oauth-client:8001/system/test")
+//                .redirectUri("http://www.baidu.com")
+//                // scope 可访问的范围
+//                .scope(OidcScopes.PROFILE)
+//                .scope(OidcScopes.OPENID)
+//                // 客户端设置，设置用户需要确认授权
+//                .clientSettings(ClientSettings.builder().requireProofKey(true).requireAuthorizationConsent(true).build())
+//                // token的相关设置
+//                .tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofHours(24)).refreshTokenTimeToLive(Duration.ofHours(48)).build())
+//                .build();
+//
+//        return new InMemoryRegisteredClientRepository(client);
+//    }
 
 //    //TODO 授权信息和授权确认修改
 //    /**
@@ -200,10 +203,10 @@ public class AuthorizationServerConfig {
      * 授权确认
      *对应表：oauth2_authorization_consent
      */
-    @Bean
-    public OAuth2AuthorizationConsentService authorizationConsentService(JdbcTemplate jdbcTemplate, RegisteredClientRepository registeredClientRepository) {
-        return new JdbcOAuth2AuthorizationConsentService(jdbcTemplate, registeredClientRepository);
-    }
+//    @Bean
+//    public OAuth2AuthorizationConsentService authorizationConsentService(JdbcTemplate jdbcTemplate, RegisteredClientRepository registeredClientRepository) {
+//        return new JdbcOAuth2AuthorizationConsentService(jdbcTemplate, registeredClientRepository);
+//    }
 
     @Bean
     public JWKSource<SecurityContext> jwkSource() {

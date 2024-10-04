@@ -6,9 +6,9 @@ spring:
     name: api-auth
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/auth-admin?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
-    username: root
-    password: root123456
+    url: jdbc:mysql://121.41.65.116:3306/auth-admin?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+    username: admin
+    password: authadmin
   data:
     redis:
       host: 192.168.160.137
