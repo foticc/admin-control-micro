@@ -36,10 +36,7 @@ import org.springframework.security.oauth2.core.OAuth2Token;
 import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.core.oidc.endpoint.OidcParameterNames;
-import org.springframework.security.oauth2.jwt.JwsHeader;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
@@ -236,7 +233,7 @@ public class AuthorizationServerConfig {
      * -keystore jwt.jks：指定密钥库的名称和位置，这里我们创建一个名为mykeystore.jks的密钥库。
      * -validity 365：设置密钥对的有效期为365天。
      *
-     *  keytool -genkey -alias jwt -keyalg RSA -keysize 2048 -keystore jwt.jks -validity 365
+     *  keytool -genkey -alias jwt -keyalg rsa -keysize 2048 -keystore jwt.jks -validity 365
      *
      * @return
      */
@@ -264,9 +261,17 @@ public class AuthorizationServerConfig {
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource());
+        KeyPair keyPair = generateRsaKey();
+        RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
+//        return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource());
+       return NimbusJwtDecoder.withPublicKey(publicKey).build();
     }
 
+
+    @Bean
+    public JwtEncoder jwtEncoder() {
+        return new NimbusJwtEncoder(jwkSource());
+    }
 
     /**
      *配置token生成器
