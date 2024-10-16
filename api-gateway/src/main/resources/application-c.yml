@@ -2,6 +2,3 @@ spring:
   cloud:
     consul:
       host: 192.168.160.137
-    nacos:
-      config:
-        server-addr: 192.168.160.137:8848

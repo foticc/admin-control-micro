@@ -14,7 +14,7 @@ public class TestController {
     }
 
     @GetMapping("/test")
-    public String test() {
-        return this.schedule.getNacosValBean().getAge();
+    public NacosValBean test() {
+        return this.schedule.getNacosValBean();
     }
 }

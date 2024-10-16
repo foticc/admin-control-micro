@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.TimeUnit;
 
 @Data
-@ConfigurationProperties(prefix = "user")
+@ConfigurationProperties(prefix = "myconfig")
 public class NacosValBean {
     private String name;
 

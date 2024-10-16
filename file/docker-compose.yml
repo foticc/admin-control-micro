@@ -8,18 +8,6 @@ services:
       - "8500:8500"
       - "8600:8600/udp"
     command: agent -server -ui -node=server-1 -bootstrap-expect=1 -client=0.0.0.0
-  nacos-server:
-    restart: always
-    container_name: nacos
-    environment:
-      - PREFER_HOST_MODE=hostname
-      - MODE=standalone
-      - NACOS_AUTH_ENABLE=true
-    ports:
-      - "8848:8848"
-      - "9848:9848"
-      - "9849:9849"
-    image: nacos/nacos-server:v2.1.1
   redis:
     restart: always
     logging:

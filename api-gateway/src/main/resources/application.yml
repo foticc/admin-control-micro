@@ -1,10 +1,9 @@
 
 spring:
   profiles:
-    active: home
+    active: c
   config:
-    import:
-      - optional:nacos:config-common
+    import: 'optional:consul:'
   cloud:
     consul:
       port: 8500
@@ -14,6 +13,13 @@ spring:
         enabled: true
         register: true
         deregister: false
+      config:
+        format: yaml
+        prefixes:
+          - config
+        default-context: application
+        profile-separator: '-'
+        data-key: data
     nacos:
       config:
         server-addr: 192.168.160.137:8848
