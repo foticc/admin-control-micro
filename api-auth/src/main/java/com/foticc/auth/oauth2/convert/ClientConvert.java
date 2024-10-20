@@ -24,7 +24,7 @@ public abstract class ClientConvert {
         clientVO.setRedirectUris(clientVO.getRedirectUris());
         clientVO.setPostLogoutRedirectUris(clientVO.getPostLogoutRedirectUris());
         clientVO.setScopes(clientVO.getScopes());
-        clientVO.setRequireProofKey(client.getClientSettings());
+        clientVO.setRequireProofKey(false);
         clientVO.setRequireAuthorizationConsent(false);
         clientVO.setJwkSetUrl("");
         clientVO.setAuthenticationSigningAlgorithm("");
