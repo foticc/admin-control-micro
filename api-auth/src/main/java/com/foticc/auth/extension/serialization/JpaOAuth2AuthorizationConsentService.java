@@ -1,6 +1,6 @@
 package com.foticc.auth.extension.serialization;
 
-import com.foticc.auth.oauth2.domain.AuthorizationConsent;
+import com.foticc.auth.oauth2.entity.AuthorizationConsent;
 import com.foticc.auth.oauth2.repository.AuthorizationConsentRepository;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.security.core.GrantedAuthority;

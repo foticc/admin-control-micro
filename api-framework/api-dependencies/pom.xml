@@ -12,9 +12,10 @@
 
 
     <properties>
+        <revision>1.0.0-SNAPSHOT</revision>
+        <org.mapstruct.version>1.6.2</org.mapstruct.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <revision>1.0.0-SNAPSHOT</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
     </properties>

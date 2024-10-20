@@ -3,7 +3,7 @@ package com.foticc.auth.extension.serialization;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.foticc.auth.oauth2.domain.Authorization;
+import com.foticc.auth.oauth2.entity.Authorization;
 import com.foticc.auth.oauth2.repository.AuthorizationRepository;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.security.jackson2.SecurityJackson2Modules;
@@ -17,7 +17,6 @@ import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.jackson2.OAuth2AuthorizationServerJackson2Module;
-import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 

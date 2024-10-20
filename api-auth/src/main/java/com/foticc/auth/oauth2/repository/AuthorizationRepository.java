@@ -1,6 +1,6 @@
 package com.foticc.auth.oauth2.repository;
 
-import com.foticc.auth.oauth2.domain.Authorization;
+import com.foticc.auth.oauth2.entity.Authorization;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

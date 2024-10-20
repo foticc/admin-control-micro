@@ -1,4 +1,4 @@
-package com.foticc.auth.oauth2.domain;
+package com.foticc.auth.oauth2.entity;
 
 import java.io.Serializable;
 import java.util.Objects;

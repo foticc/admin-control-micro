@@ -20,6 +20,7 @@
     <properties>
         <revision>1.0.0-SNAPSHOT</revision>
         <java.version>17</java.version>
+        <org.mapstruct.version>1.6.2</org.mapstruct.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -33,6 +34,12 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${org.mapstruct.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -92,6 +99,23 @@
                     </execution>
                 </executions>
             </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-compiler-plugin</artifactId>-->
+<!--                <version>3.8.1</version>-->
+<!--                <configuration>-->
+<!--                    <source>${java.version}</source> &lt;!&ndash; depending on your project &ndash;&gt;-->
+<!--                    <target>${java.version}</target> &lt;!&ndash; depending on your project &ndash;&gt;-->
+<!--                    <annotationProcessorPaths>-->
+<!--                        <path>-->
+<!--                            <groupId>org.mapstruct</groupId>-->
+<!--                            <artifactId>mapstruct-processor</artifactId>-->
+<!--                            <version>${org.mapstruct.version}</version>-->
+<!--                        </path>-->
+<!--                        &lt;!&ndash; other annotation processors &ndash;&gt;-->
+<!--                    </annotationProcessorPaths>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 </project>

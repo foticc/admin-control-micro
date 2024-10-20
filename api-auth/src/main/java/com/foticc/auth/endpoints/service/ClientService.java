@@ -1,7 +1,7 @@
 package com.foticc.auth.endpoints.service;
 
 
-import com.foticc.auth.oauth2.domain.Client;
+import com.foticc.auth.oauth2.entity.Client;
 import com.foticc.auth.oauth2.repository.ClientRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

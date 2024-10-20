@@ -1,10 +1,9 @@
 package com.foticc.auth.endpoints;
 
 import com.foticc.auth.endpoints.service.ClientService;
-import com.foticc.auth.oauth2.domain.Client;
+import com.foticc.auth.oauth2.entity.Client;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
